@@ -6,6 +6,9 @@ const ProductService = new ProductsService();
 
 router.get('/', async function(req, res, next){
   const { tags } = req.query;
+
+  console.log("req", req.query);
+
   try {
     const products = await ProductService.getProducts({ tags });
 
@@ -14,12 +17,15 @@ router.get('/', async function(req, res, next){
       message: 'products listed'
     });
   } catch(err) {
-    next(err)
+    next(err);
   }
 });
 
-router.get('/:productId', async function(req, res){
+router.get('/:productId', async function(req, res, next){
   const { productId } = req.params;
+
+  console.log("req", req.params);
+
   try {
     const product = await ProductService.getProduct({ productId });
 
@@ -28,50 +34,59 @@ router.get('/:productId', async function(req, res){
       message: 'product retrieved'
     });
   } catch(err) {
-    next(err)
+    next(err);
   }
 });
 
-router.post('/', function(req, res){
+router.post('/', async function(req, res, next){
   const { body: product } = req;
+
+  console.log("req", req.body);
+
   try {
-    const createdProduct = ProductService.createProduct({ product });
+    const createdProduct = await ProductService.createProduct({ product });
 
     res.status(201).json({
       data: createdProduct,
       message: 'products created'
     });
   } catch(err) {
-    next(err)
+    next(err);
   }
 });
 
-router.put('/:productId', function(req, res){
+router.put('/:productId', async function(req, res, next){
   const { productId } = req.params;
+  const { body: product } = req;
+
+  console.log("req", req.params, req.body);
+
   try {
-    const { body: product } = req;
-    const updatedProduct = ProductService.updateProduct({ productId, product });
+    const updatedProduct = await ProductService.updateProduct({ productId, product });
 
     res.status(200).json({
       data: updatedProduct,
       message: 'product updated'
     });
   } catch(err) {
-    next(err)
+    next(err);
   }
 });
 
-router.delete('/:productId', function(req, res){
+router.delete('/:productId', async function(req, res){
   const { productId } = req.params;
+
+  console.log("req", req.params);
+
   try {
-    const deletedProduct = ProductService.deleteProduct({ productId });
+    const deletedProduct = await ProductService.deleteProduct({ productId });
 
     res.status(200).json({
       data: deletedProduct,
       message: 'product deleted'
     });
   } catch(err) {
-    next(err)
+    next(err);
   }
 });
 
